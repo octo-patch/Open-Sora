@@ -35,9 +35,11 @@ class TestStripThinkTags(unittest.TestCase):
 
 class TestMiniMaxConfig(unittest.TestCase):
     def test_minimax_models_list(self):
+        self.assertIn("MiniMax-M3", MINIMAX_MODELS)
         self.assertIn("MiniMax-M2.7", MINIMAX_MODELS)
         self.assertIn("MiniMax-M2.7-highspeed", MINIMAX_MODELS)
-        self.assertEqual(len(MINIMAX_MODELS), 2)
+        self.assertEqual(MINIMAX_MODELS[0], "MiniMax-M3")
+        self.assertEqual(len(MINIMAX_MODELS), 3)
 
     def test_minimax_base_url_default(self):
         self.assertTrue(MINIMAX_BASE_URL.startswith("https://api.minimax.io"))
@@ -158,7 +160,7 @@ class TestRefinePrompt(unittest.TestCase):
         self.assertLessEqual(call_kwargs["temperature"], 1.0)
 
     @patch("opensora.utils.prompt_refine.OpenAI")
-    def test_refine_prompts_by_minimax_uses_m27(self, mock_openai_cls):
+    def test_refine_prompts_by_minimax_uses_m3(self, mock_openai_cls):
         mock_client = MagicMock()
         mock_client.chat.completions.create.return_value = self._make_mock_response("Refined.")
         mock_openai_cls.return_value = mock_client
@@ -168,7 +170,7 @@ class TestRefinePrompt(unittest.TestCase):
 
         self.assertEqual(results, ["Refined."])
         call_kwargs = mock_client.chat.completions.create.call_args[1]
-        self.assertEqual(call_kwargs["model"], "MiniMax-M2.7")
+        self.assertEqual(call_kwargs["model"], "MiniMax-M3")
 
     @patch("opensora.utils.prompt_refine.OpenAI")
     def test_returns_original_on_failure(self, mock_openai_cls):

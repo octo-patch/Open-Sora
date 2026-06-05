@@ -8,6 +8,7 @@ from openai import OpenAI
 MINIMAX_BASE_URL = os.environ.get("MINIMAX_BASE_URL", "https://api.minimax.io/v1")
 
 MINIMAX_MODELS = [
+    "MiniMax-M3",
     "MiniMax-M2.7",
     "MiniMax-M2.7-highspeed",
 ]
@@ -126,7 +127,7 @@ def refine_prompt(
         image_path: Path to reference image (required when type="i2v").
         model: LLM model to use for refinement. Defaults to the PROMPT_MODEL
                environment variable, or "gpt-4o" if unset. Use MiniMax models
-               (e.g. "MiniMax-M2.7") together with MINIMAX_API_KEY.
+               (e.g. "MiniMax-M3") together with MINIMAX_API_KEY.
     """
     if model is None:
         model = os.environ.get("PROMPT_MODEL", "gpt-4o")
@@ -170,7 +171,7 @@ def refine_prompt(
                         "content": f'Create an imaginative video descriptive caption or modify an earlier caption in ENGLISH for the user input: " {text} "',
                     },
                 ],
-                model=model,  # glm-4-plus, gpt-4o, and MiniMax-M2.7 have been tested
+                model=model,  # glm-4-plus, gpt-4o, and MiniMax-M3 have been tested
                 temperature=0.01,
                 top_p=0.7,
                 stream=False,
@@ -201,7 +202,7 @@ def refine_prompt(
                         "content": f'Create an imaginative image descriptive caption or modify an earlier caption in ENGLISH for the user input: " {text} "',
                     },
                 ],
-                model=model,  # glm-4-plus, gpt-4o, and MiniMax-M2.7 have been tested
+                model=model,  # glm-4-plus, gpt-4o, and MiniMax-M3 have been tested
                 temperature=0.01,
                 top_p=0.7,
                 stream=False,
@@ -266,7 +267,7 @@ def refine_prompt(
                         "content": f"{text}",
                     },
                 ],
-                model=model,  # glm-4-plus, gpt-4o, and MiniMax-M2.7 have been tested
+                model=model,  # glm-4-plus, gpt-4o, and MiniMax-M3 have been tested
                 temperature=0.01,
                 top_p=0.7,
                 stream=False,
@@ -302,7 +303,7 @@ def refine_prompts_by_minimax(
     retry_times: int = 3,
     type: str = "t2v",
     image_paths: list[str] = None,
-    model: str = "MiniMax-M2.7",
+    model: str = "MiniMax-M3",
 ):
     """Refine prompts using the MiniMax API (requires MINIMAX_API_KEY)."""
     return refine_prompts(prompts, retry_times=retry_times, type=type, image_paths=image_paths, model=model)
